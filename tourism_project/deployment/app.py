@@ -59,10 +59,15 @@ input_data = {
 st.write("### Input Data Preview", input_data)
 
 # ------- Prediction Button ---------
-
 if st.button("Predict Package Purchase"):
     st.write("🔄 Sending data to model...")
-    prediction = model.predict(input_data)[0]
-    result = "Tourism Package Purchased" if prediction == 1 else "Tourism Package Not Purchased"
-    st.subheader("Prediction Result:")
-    st.success(f"The model predicts: **{result}**")
+    import pandas as pd
+df_input = pd.DataFrame([input_data])
+for _col in ['Passport','OwnCar']:
+    if _col in df_input.columns:
+        df_input[_col] = df_input[_col].replace({'Yes':1,'No':0,'yes':1,'no':0})
+prediction = model.predict(df_input)[0]
+
+result = "Tourism Package Purchased" if prediction == 1 else "Tourism Package Not Purchased"
+st.subheader("Prediction Result:")
+st.success(f"The model predicts: **{result}**")
